@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mini Address Book</title>
+    <script src="js/scripts.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+    <h2>Mini Address Book</h2>
+    <!--Sort by name and telephone-->
+    <div class="deleteButton">
+        <span id="sortNameCont" color='"#000000"'>
+            <input type="button" id="sortByName" value="Sort by Name" />
+            <span id="nameAsc" style="visibility: hidden">&#9650;</span>
+            <span id="nameDesc" style="visibility: hidden">&#9660;</span>
+        </span>
+
+        <span id="sortPhoneCont" color='"#000000"'>
+            <input type="button" id="sortByPhone" value="Sort by Telephone" />
+            <span id="phoneAsc" style="visibility: hidden">&#9650;</span>
+            <span id="phoneDesc" style="visibility: hidden">&#9660;</span>
+        </span>
+    </div>
+    <!-- Display contact list and provide multiple item delete feature -->
+    <div class="listBox">
+        <select name="contactsList" id="contactsList" multiple>
+            <!--<option value="101"><span>Rob Ford | rob@ford.com | 6579908873</span></option>-->
+        </select>
+    </div>
+
+    <div class="deleteButton">
+        <input type="button" id="deleteBtn" value="Delete Selected" />
+    </div>
+
+    <h3>Add Contact</h3>
+    <p>Fields with * are required.</p>
+    <!-- Add contact form -->
+    <form id="formAddContact">
+        <div class="formBorder">
+            <div>
+                <input type="text" id="firstName" placeholder="* First Name" required />
+                <input type="text" id="lastName" placeholder="* Last Name" required />
+            </div>
+            <div>
+                <input type="text" id="telephone" placeholder="* Telephone" required />
+                <input type="email" id="email" placeholder="Email" />
+            </div>
+            <div class="formButtons">
+                <input type="reset" id="resetBtn" value="Clear All" />
+                <input type="submit" id="submitBtn" value="Add Contact" />
+            </div>
+        </div>
+    </form>
+
+</body>
+</html>
