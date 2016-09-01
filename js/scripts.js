@@ -31,11 +31,15 @@
         this.deleteBtn = document.getElementById('deleteBtn');
         // Get the sort by name button
         this.sortByName = document.getElementById('sortByName');
+        // Get the sort by name button
+        this.sortByLName = document.getElementById('sortByLName');
         // Get the sort by telephone button
         this.sortByPhone = document.getElementById('sortByPhone');
         // Get the sort asc desc span elements
         ContactsImpl.prototype.nameAsc = document.getElementById('nameAsc');
         ContactsImpl.prototype.nameDesc = document.getElementById('nameDesc');
+        ContactsImpl.prototype.lNameAsc = document.getElementById('lNameAsc');
+        ContactsImpl.prototype.lNameDesc = document.getElementById('lNameDesc');
         ContactsImpl.prototype.phoneAsc = document.getElementById('phoneAsc');
         ContactsImpl.prototype.phoneDesc = document.getElementById('phoneDesc');
         // Reset the form
@@ -58,13 +62,15 @@
             contactsController.delete();
         }, true);
 
-        // Bind sort by name event
+        // Bind sort by first name event
         this.sortByName.addEventListener("click", function(event) {
             this.sortDir = !this.sortDir;
             var sortDir = this.sortDir ? 'desc' : 'asc';
             ContactsImpl.prototype.phoneDesc.style.visibility = 'hidden';
             ContactsImpl.prototype.phoneAsc.style.visibility = 'hidden';
-            contactsController.sort(contactsImpl.contactsList, sortDir, false);
+            ContactsImpl.prototype.lNameDesc.style.visibility = 'hidden';
+            ContactsImpl.prototype.lNameAsc.style.visibility = 'hidden';
+            contactsController.sort(contactsImpl.contactsList, sortDir, false, null);
             if(sortDir == 'asc') {
                 ContactsImpl.prototype.nameDesc.style.visibility = 'hidden';
                 ContactsImpl.prototype.nameAsc.style.visibility = 'visible';
@@ -74,13 +80,33 @@
             }
         }, true);
 
+        // Bind sort by last name event
+        this.sortByLName.addEventListener("click", function(event) {
+            this.sortDir = !this.sortDir;
+            var sortDir = this.sortDir ? 'desc' : 'asc';
+            ContactsImpl.prototype.phoneDesc.style.visibility = 'hidden';
+            ContactsImpl.prototype.phoneAsc.style.visibility = 'hidden';
+            ContactsImpl.prototype.nameDesc.style.visibility = 'hidden';
+            ContactsImpl.prototype.nameAsc.style.visibility = 'hidden';
+            contactsController.sort(contactsImpl.contactsList, sortDir, false, 'lName');
+            if(sortDir == 'asc') {
+                ContactsImpl.prototype.lNameDesc.style.visibility = 'hidden';
+                ContactsImpl.prototype.lNameAsc.style.visibility = 'visible';
+            } else {
+                ContactsImpl.prototype.lNameDesc.style.visibility = 'visible';
+                ContactsImpl.prototype.lNameAsc.style.visibility = 'hidden';
+            }
+        }, true);
+
         // Bind sort by phone event
         this.sortByPhone.addEventListener("click", function(event) {
             this.sortDir = !this.sortDir;
             var sortDir = this.sortDir ? 'desc' : 'asc';
             ContactsImpl.prototype.nameDesc.style.visibility = 'hidden';
             ContactsImpl.prototype.nameAsc.style.visibility = 'hidden';
-            contactsController.sort(contactsImpl.contactsList, sortDir, true);
+            ContactsImpl.prototype.lNameDesc.style.visibility = 'hidden';
+            ContactsImpl.prototype.lNameAsc.style.visibility = 'hidden';
+            contactsController.sort(contactsImpl.contactsList, sortDir, true, null);
             if(sortDir == 'asc') {
                 ContactsImpl.prototype.phoneDesc.style.visibility = 'hidden';
                 ContactsImpl.prototype.phoneAsc.style.visibility = 'visible';
@@ -97,6 +123,7 @@
         var $option = document.createElement("option");
         //Setting phone no. in value so we can sort by telephone
         $option.setAttribute('value', ''+contactObj.telephone);
+        $option.setAttribute('lname', ''+contactObj.last_name);
         $option.text += contactObj.first_name + " " + contactObj.last_name + " |";
 
         $option.text += " "+contactObj.telephone + " |";
@@ -122,7 +149,7 @@
         }
     };
 
-    ContactsImpl.prototype.sortList = function(select, sortDir, value) {
+    ContactsImpl.prototype.sortList = function(select, sortDir, value, sortBy) {
         value = typeof value == 'boolean' ? value : false;
         sortDir = ['asc','desc'].indexOf(sortDir) > -1 ? sortDir : 'asc';
 
@@ -135,7 +162,10 @@
                 options.push(opts[i]);
             }
         }
-        options.sort(value ? this.sortVals : this.sortText);
+        if(sortBy == 'lName')
+            options.sort(this.sortLName);
+        else
+            options.sort(value ? this.sortVals : this.sortText);
         if(sortDir == 'desc') {
             options.reverse();
         }
@@ -149,6 +179,10 @@
         }
         this.sortVals = function(a,b) {
             return a.value > b.value ? 1 : -1;
+        }
+        // Sort By Last Name using custom attribute lname
+        this.sortLName = function(a,b) {
+            return a.attributes.lname.value > b.attributes.lname.value ? 1 : -1;
         }
 
     };
@@ -165,8 +199,8 @@
         contactsImpl.removeContact();
     };
 
-    ContactsController.prototype.sort = function(select, sortDir, value) {
-        contactsImpl.sortList(select, sortDir, value);
+    ContactsController.prototype.sort = function(select, sortDir, value, sortBy) {
+        contactsImpl.sortList(select, sortDir, value, sortBy);
     };
 
     ContactsController.prototype.init = function() {
